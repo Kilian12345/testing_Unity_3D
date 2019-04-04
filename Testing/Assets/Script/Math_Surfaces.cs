@@ -8,7 +8,7 @@ public class Math_Surfaces : MonoBehaviour
     	public Transform pointPrefab;
         Transform[] points;
         static Math_Surfaces_Delegate[] functions = 
-        { SineFunction, MultiSineFunction, CustomSineFunction, Sine2DFunction, MultiSine2DFunction };
+        { SineFunction, MultiSineFunction, CustomSineFunction, Sine2DFunction, MultiSine2DFunction, Ripple, KilianTest };
 
         [Range(10, 100)] public int resolution = 10;
         public Math_Surface_Delegate_Name function;
@@ -50,6 +50,22 @@ public class Math_Surfaces : MonoBehaviour
 	    	y += Mathf.Sin(2f * pi * (z + 2f * t)) * 0.5f;
 	    	y *= 1f / 5.5f;
 	    	return y;
+	    }
+
+        static float Ripple (float x, float z, float t)
+        {
+		    float d = Mathf.Sqrt(x * x + z * z);
+		    float y = Mathf.Sin(pi * (4.0f * d - t));
+            y /= 1.0f + 10.0f * d;
+		    return y;
+	    }
+
+        static float KilianTest (float x, float z, float t)
+        {
+		    float d = Mathf.Sqrt(x * x + z * z);
+		    float y = Mathf.Acos(pi * (4.0f * d - t));
+            y /= 1.0f + 10.0f * d;
+		    return y;
 	    }
      #endregion
 

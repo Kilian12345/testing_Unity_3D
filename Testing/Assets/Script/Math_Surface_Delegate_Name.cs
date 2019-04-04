@@ -8,6 +8,8 @@ public enum Math_Surface_Delegate_Name
 	MultiSine,
     CustomSine,
     Sine2DFunction,
-    MultiSine2DFunction
+    MultiSine2DFunction,
+    Ripple,
+    KilianTest
 
 }
