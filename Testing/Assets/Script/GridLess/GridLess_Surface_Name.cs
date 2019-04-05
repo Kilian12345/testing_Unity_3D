@@ -10,6 +10,8 @@ public enum GridLess_Surface_Name
     Sine2DFunction,
     MultiSine2DFunction,
     Ripple,
-    KilianTest
+    KilianTest,
+    Cylinder,
+    Sphere
 
 }

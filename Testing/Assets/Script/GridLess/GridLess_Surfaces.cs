@@ -8,7 +8,16 @@ public class GridLess_Surfaces : MonoBehaviour
     	public Transform pointPrefab;
         Transform[] points;
         static GridLess_Surface_Delegate[] functions = 
-        { SineFunction, MultiSineFunction, CustomSineFunction, Sine2DFunction, MultiSine2DFunction, Ripple, KilianTest };
+        { SineFunction, 
+        MultiSineFunction, 
+        CustomSineFunction, 
+        Sine2DFunction, 
+        MultiSine2DFunction, 
+        Ripple,  
+        KilianTest,
+        Cylinder,
+        Sphere
+        };
 
         [Range(10, 100)] public int resolution = 10;
         public GridLess_Surface_Name function;
@@ -39,9 +48,10 @@ public class GridLess_Surfaces : MonoBehaviour
         static Vector3 CustomSineFunction (float x, float z, float t) 
         {
             Vector3 p;
-            p.x = x;
-		    p.y = Mathf.Cos(pi * (x + t)) / 3f;
-            p.z = z;
+            p.x = Mathf.Sin(pi * (x + t/2f)) / 3f;
+		    p.y = Mathf.Cos(pi * (x + t/2f)) / 3f;
+            p.z = Mathf.Tan(pi * (x + t/2f)) / 3f;
+            p *= 3;
 		    return p;
 	    }
 
@@ -79,62 +89,72 @@ public class GridLess_Surfaces : MonoBehaviour
 		    return p;
 	    }
 
-        static float KilianTest (float x, float z, float t)
+        static Vector3 KilianTest (float x, float z, float t)
         {
+            Vector3 p;
 		    float d = 15 / Mathf.Sqrt(x * x + z * z);
 		    float y = 200 * Mathf.Floor(pi * 4.0f * d);
             float w = 100 / Mathf.Tan ( y*0.25f - t);
             w /= 1.0f +  d;
-		    return w;
+
+            p.x = x;
+		    p.y = w;
+		    p.z = z;
+		    return p;
+	    }
+
+        static Vector3 Cylinder (float u, float v, float t)
+        {
+            Vector3 p;
+		    float r = 0.8f + Mathf.Sin(pi * (6f * u + 2f * v + t)) * 0.2f;
+	        p.x = r * Mathf.Sin(pi * u );
+		    p.y = v;
+		    p.z = r * Mathf.Cos(pi * u);
+
+		    return p;
+        }
+
+        static Vector3 Sphere (float u, float v, float t) 
+        {
+		    Vector3 p;
+		    float r = Mathf.Cos(pi * 0.5f * v);
+		    p.x = r * Mathf.Sin(pi * u  + t);
+		    p.y = Mathf.Sin(pi * 0.5f * v );
+		    p.z = r * Mathf.Cos(pi * u + t);
+		    return p;
 	    }
      #endregion
 
-  void Awake () 
-  {
-        float step = 2f / resolution;
+	void Awake () 
+    {
+		float step = 2f / resolution;
 		Vector3 scale = Vector3.one * step;
-		Vector3 position;
-        position.y = 0f;
-        position.z = 0f;
-        points = new Transform[resolution * resolution];
+		points = new Transform[resolution * resolution];
 
-
-		for (int i = 0, z = 0; z < resolution; z++) 
+		for (int i = 0; i < points.Length; i++)
         {
-            position.z = (z + 0.5f) * step - 1f;
-
-			for (int x = 0; x < resolution; x++, i++) 
-            {
-
-			    Transform point = Instantiate(pointPrefab);
-			    position.x = (x + 0.5f) * step - 1f;
-			    point.localPosition = position;
-                point.localScale = scale;
-                point.SetParent(transform, false);
-
-                points[i] = point;
-            }
+			Transform point = Instantiate(pointPrefab);
+			point.localScale = scale;
+			point.SetParent(transform, false);
+			points[i] = point;
 		}
-
-    }
+	}
 
 	
 
 
     // Update is called once per frame
-    void Update()
-    {
-        	float t = Time.time;
-            GridLess_Surface_Delegate f = functions[(int)function];
+	void Update () {
+		float t = Time.time;
+		GridLess_Surface_Delegate f = functions[(int)function];
 
-        	for (int i = 0; i < points.Length; i++) 
-            {
-			    Transform point = points[i];
-			    Vector3 position = point.localPosition;
-
-			    position.y = f(position.x, position.z, t);
-
-                point.localPosition = position;              
-            }
-    }
+		float step = 2f / resolution;
+		for (int i = 0, z = 0; z < resolution; z++) {
+			float v = (z + 0.5f) * step - 1f;
+			for (int x = 0; x < resolution; x++, i++) {
+				float u = (x + 0.5f) * step - 1f;
+				points[i].localPosition = f(u, v, t);
+			}
+		}
+	}
 }
