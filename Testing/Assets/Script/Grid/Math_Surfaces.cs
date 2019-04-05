@@ -62,9 +62,9 @@ public class Math_Surfaces : MonoBehaviour
 
         static float KilianTest (float x, float z, float t)
         {
-		    float d = Mathf.Sqrt(x * x + z * z);
-		    float y = Mathf.Floor(pi * 4.0f * d);
-            float w = Mathf.Tan ( y*0.25f - t);
+		    float d = 15 / Mathf.Sqrt(x * x + z * z);
+		    float y = 200 * Mathf.Floor(pi * 4.0f * d);
+            float w = 100 / Mathf.Tan ( y*0.25f - t);
             w /= 1.0f +  d;
 		    return w;
 	    }
