@@ -16,7 +16,8 @@ public class GridLess_Surfaces : MonoBehaviour
         Ripple,  
         KilianTest,
         Cylinder,
-        Sphere
+        Sphere,
+        Torus
         };
 
         [Range(10, 100)] public int resolution = 10;
@@ -123,6 +124,19 @@ public class GridLess_Surfaces : MonoBehaviour
 		    p.z = r * Mathf.Cos(pi * u + t);
 		    return p;
 	    }
+
+        static Vector3 Torus (float u, float v, float t)
+        {
+		    Vector3 p;
+	    	float r1 = 0.65f + Mathf.Sin(pi * (6f * u + t)) * 0.1f;
+	    	float r2 = 0.2f + Mathf.Sin(pi * (4f * v + t)) * 0.1f;
+		    float s = r2 * Mathf.Cos(pi * v) + r1;
+		    p.x = s * Mathf.Sin(pi * u + t * 0.1f);
+	    	p.y = r2 * Mathf.Tan(pi * v) * 2f;
+	    	p.z = s * Mathf.Cos(pi * u + t * 0.1f);
+
+		    return p;
+    	}
      #endregion
 
 	void Awake () 

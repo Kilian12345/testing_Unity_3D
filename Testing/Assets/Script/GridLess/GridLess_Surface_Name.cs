@@ -12,6 +12,7 @@ public enum GridLess_Surface_Name
     Ripple,
     KilianTest,
     Cylinder,
-    Sphere
+    Sphere,
+    Torus
 
 }
