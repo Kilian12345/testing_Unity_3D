@@ -9,15 +9,19 @@
 float3 _WireframeColor;
 float _WireframeSmoothing;
 float _WireframeThickness;
-float3 worldPos;
 
 float3 GetAlbedoWithWireframe (Interpolators i) {
 	float3 albedo = GetAlbedo(i);
 	float3 barys;
 	barys.xy = i.barycentricCoordinates;
 	barys.z = 1 - barys.x - barys.y;
-	albedo = barys * worldPos.xyz;
-	return albedo;
+	float3 deltas = fwidth(barys);
+	float3 smoothing = deltas * _WireframeSmoothing;
+	float3 thickness = deltas * _WireframeThickness;
+	barys = smoothstep(thickness, thickness + smoothing, barys);
+	float minBary = min(barys.x, min(barys.y, barys.z));
+	_WireframeColor.r = i.worldPos.y * 0.1 +0.5;
+	return lerp(_WireframeColor, albedo, minBary);
 }
 
 #define ALBEDO_FUNCTION GetAlbedoWithWireframe
@@ -55,23 +59,7 @@ void MyGeometryProgram (
 	stream.Append(g0);
 	stream.Append(g1);
 	stream.Append(g2);
-}
 
+}
 
 #endif
-
-/*
-float3 GetAlbedoWithWireframe (Interpolators i) {
-	float3 albedo = GetAlbedo(i);
-	albedo.r= worldPos.x * 0.5 + 0.5;
-	float3 barys;
-	barys.xy = i.barycentricCoordinates;
-	barys.z = 1 - barys.x - barys.y;
-	float3 deltas = fwidth(barys);
-	float3 smoothing = deltas * _WireframeSmoothing;
-	float3 thickness = deltas * _WireframeThickness;
-	barys = smoothstep(thickness, thickness + smoothing, barys);
-	float minBary = min(barys.x, min(barys.y, barys.z));
-	return lerp(_WireframeColor, albedo, minBary);
-}
-*/
