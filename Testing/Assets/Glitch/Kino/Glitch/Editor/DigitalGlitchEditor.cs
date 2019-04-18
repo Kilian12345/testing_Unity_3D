@@ -26,7 +26,7 @@ using UnityEditor;
 namespace Kino
 {
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(DigitalGlitch))]
+    //[CustomEditor(typeof(DigitalGlitch))]
     public class DigitalGlitchEditor : Editor
     {
         SerializedProperty _intensity;

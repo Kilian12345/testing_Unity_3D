@@ -26,13 +26,14 @@ using UnityEditor;
 namespace Kino
 {
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(AnalogGlitch))]
+    //[CustomEditor(typeof(AnalogGlitch))]
     public class AnalogGlitchEditor : Editor
     {
         SerializedProperty _scanLineJitter;
         SerializedProperty _verticalJump;
         SerializedProperty _horizontalShake;
         SerializedProperty _colorDrift;
+        SerializedProperty _jumpValue;
 
         void OnEnable()
         {
@@ -40,6 +41,7 @@ namespace Kino
             _verticalJump = serializedObject.FindProperty("_verticalJump");
             _horizontalShake = serializedObject.FindProperty("_horizontalShake");
             _colorDrift = serializedObject.FindProperty("_colorDrift");
+            _jumpValue = serializedObject.FindProperty("_jumpValue");
         }
 
         public override void OnInspectorGUI()
@@ -48,8 +50,9 @@ namespace Kino
 
             EditorGUILayout.PropertyField(_scanLineJitter);
             EditorGUILayout.PropertyField(_verticalJump);
-            EditorGUILayout.PropertyField(_horizontalShake);
+          //  EditorGUILayout.PropertyField(_horizontalShake);
             EditorGUILayout.PropertyField(_colorDrift);
+            EditorGUILayout.PropertyField(_jumpValue);
 
             serializedObject.ApplyModifiedProperties();
         }

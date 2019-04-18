@@ -37,6 +37,7 @@ Shader "Hidden/Kino/Glitch/Analog"
     float2 _VerticalJump;   // (amount, time)
     float _HorizontalShake;
     float2 _ColorDrift;     // (amount, time)
+    float _JumpValue;
 
     float nrand(float x, float y)
     {
@@ -49,20 +50,21 @@ Shader "Hidden/Kino/Glitch/Analog"
         float v = i.uv.y;
 
         // Scan line jitter
-        float jitter = nrand(v, _Time.x) * 2 - 1;
+        float jitter = floor(nrand(v, _Time.x) * 2 - 1);
         jitter *= step(_ScanLineJitter.y, abs(jitter)) * _ScanLineJitter.x;
 
         // Vertical jump
         float jump = lerp(v, frac(v + _VerticalJump.y), _VerticalJump.x);
+        jump += _JumpValue;
 
         // Horizontal shake
-        float shake = (nrand(_Time.x, 2) - 0.5) * _HorizontalShake;
+        //float shake = (nrand(_Time.x, 2) - 0.5) * _HorizontalShake;
 
         // Color drift
-        float drift = sin(jump + _ColorDrift.y) * _ColorDrift.x;
+        float drift = sin(jump + _ColorDrift.x) * _ColorDrift.x;
 
-        half4 src1 = tex2D(_MainTex, frac(float2(u + jitter + shake, jump)));
-        half4 src2 = tex2D(_MainTex, frac(float2(u + jitter + shake + drift, jump)));
+        half4 src1 = tex2D(_MainTex, frac(float2(u + jitter, jump)));
+        half4 src2 = tex2D(_MainTex, frac(float2(u + jitter + drift, jump)));
 
         return half4(src1.r, src2.g, src1.b, 1);
     }
